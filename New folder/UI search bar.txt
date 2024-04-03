@@ -1,0 +1,37 @@
+// CONNECTED UI SEARCH BAR WITH BACK END
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function RoomSearch() {
+  const [keyword, setKeyword] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`/rooms/search?keyword=${keyword}`);
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error('Error searching rooms:', error);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search by room name"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+      <button onClick={handleSearch}>Search</button>
+      <ul>
+        {searchResults.map(room => (
+          <li key={room.id}>{room.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default RoomSearch;

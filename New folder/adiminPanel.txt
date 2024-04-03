@@ -1,0 +1,48 @@
+// CONNECTED ADMIN PANEL (*****ONLY UPDATE & DELETE WITH BUTTONS*****) JSX CODE
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function RoomList() {
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const response = await axios.get('/rooms');
+      setRooms(response.data);
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
+
+  const deleteRoom = async (id) => {
+    try {
+      await axios.delete(`/rooms/${id}`);
+      // Update the room list after deletion
+      fetchRooms();
+    } catch (error) {
+      console.error('Error deleting room:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Room List</h1>
+      <ul>
+        {rooms.map(room => (
+          <li key={room.id}>
+            {room.name} - 
+            <button onClick={() => deleteRoom(room.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default RoomList;
